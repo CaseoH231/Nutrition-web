@@ -1,0 +1,9 @@
+{
+  // Must match the Worker name in the Cloudflare dashboard.
+  "name": "nutrition-web",
+  "compatibility_date": "2026-11-01",
+  // Upload everything in ./public as the website (index.html, style.css, script.js).
+  "assets": {
+    "directory": "./public"
+  }
+}
