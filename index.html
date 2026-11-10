@@ -1,0 +1,357 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Health & Nutrition</title>
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+<header>
+    <h1>Health & Nutrition</h1>
+    <p>
+        Learn about making healthy choices for your body and lifestyle.
+    </p>
+</header>
+<nav>
+    <div class="nav-links">
+        <a href="#section1">Nutrition</a>
+        <a href="#section2">Healthy Eating</a>
+        <a href="#section3">Health</a>
+        <a href="#section4">Lifestyle</a>
+        <a href="#section5">Nutrition Snake</a>
+        <a href="#section6">Game 2</a>
+        <a href="#section7">Game 3</a>
+    </div>
+    <button
+        id="themeButton"
+        onclick="toggleTheme()"
+        aria-label="Toggle dark mode"
+    >
+        ☾
+    </button>
+</nav>
+<main>
+<section id="section1">
+    <h2 class="section-title">
+        Nutrition
+    </h2>
+    <div class="content-box">
+        <p>
+            <strong>Important information about nutrition</strong>
+        </p>
+        <p>
+Nutrients: Essential food compounds required for life, growth, and bodily repair. </br>
+
+Macronutrients: Large-scale nutrients that provide your body with energy in the form of calories. </br>
+
+Carbohydrates: The body's primary and fastest fuel source, providing 4 calories per gram. </br>
+
+Proteins: Structural building blocks made of amino acids that repair muscles and organs, providing 4 calories per gram. </br>
+
+Fats: Sources for cell health, hormone production, and nutrient absorption, providing 9 calories per gram. </br>
+
+Micronutrients: Low-dose vitamins and minerals required to keep your metabolism and organs running smoothly. </br>
+
+Vitamins: Organic compounds split into water-soluble and fat-soluble categories that regulate cellular processes. </br>
+
+Minerals: Inorganic elements necessary for structural bone health, nerve signals, and fluid balance. </br>
+
+Water: A zero-calorie essential that regulates body temperature and transports nutrients to cells. </br>
+        </p>
+    </div>
+</section>
+<section id="section2">
+    <h2 class="section-title">
+        Healthy Eating
+    </h2>
+    <div class="content-box">
+        <p>
+            <strong>Important information on healthy eating</strong>
+        </p>
+        <p>
+Tips for eating healthy: </br>
+
+Eat regularly </br>
+
+Don’t skip breakfast </br>
+
+Eat with other people not the tv </br>
+
+This helps because eating with other people usually includes more food groups and makes you eat more regularly. </br>
+</br>
+Building a balanced plate: </br>
+
+Half your plate should be fruits and veg, potatoes dot count. </br>
+
+A quarter of the plate should be wholegrains like brown rice, oats, whole-wheat pasta or whole grain bread. </br>
+
+The last quarter on the plate should be filled with healthy protein like fish, poultry, beans, lentils, nuts, seeds, eggs or tofu. And limit red meats like bacon and sausage. </br>
+
+Cooking with oils like avocado oil, extra virgin olive oil and canola oil are good because they are healthy fats. </br>
+</br>
+Diet: </br>
+
+Drink lots of water, tea or coffee, less sugary drinks and energy drinks.  </br>
+
+Cut back on sugars, sodium and saturated fats. </br>
+
+Watch how much you eat and try cook at home because you can see what goes in it. </br>
+        </p>
+    </div>
+</section>
+<section id="section3">
+    <h2 class="section-title">
+        Health
+    </h2>
+    <div class="content-box">
+        <p>
+            <strong>Important information on health</strong>
+        </p>
+        <p>
+Physical Health: It can benefit your physical health by improving your bodies overall condition allowing you to perform usual day to day activities with fatigue and stress. </br>
+
+Mental Health: It can benefit your mental health by improving your wellbeing, reducing stress and improving your decision making. </br>
+
+Disease Prevention: It can improve your disease prevention by supplying your body with micronutrients and fibres that can help regulate your metabolism and support the immune system. </br>
+
+
+
+Benefits of eating certain food:  </br>
+
+Berries: Support Health and Brain functions </br>
+
+Greens such as spinach: Protect eye health and lower blood levels </br>
+
+Almonds and Walnuts: Benefits your heart and brain. </br>
+
+Oily Fish: Reduce the risk of heart disease and support cellular health </br>
+
+Legumes such as beans: offer high dietary fibre to aid blood sugar control and gut health. </br>
+
+Avocados: Improve heart health </br>
+        </p>
+    </div>
+</section>
+<section id="section4">
+    <h2 class="section-title">
+        Lifestyle
+    </h2>
+    <div class="content-box">
+        <p>
+            <strong>Important information on Lifestyle</strong>
+        </p>
+        <p>
+Adults need 7 to 9 hours of uninterrupted sleep. </br>
+
+Maintain a constant sleep schedule of sleeping and waking at similar if not the same times. </br>
+
+Avoid heavy meals, caffeine, nicotine and alcohol close to when going to sleep. </br>
+
+Turn off phones, laptops, and computers 1 to 2 hours before going to sleep as blue light can trick your brain into staying awake. </br>
+
+Exercising regularly can reduce stress. Moving your body for at least 30 minutes a day or aim for 150 minutes of moderate activity.  </br>
+
+Focusing on what you can control can help lower stress. This can be done by denying extra plans, denying a drink or denying playing too many games. </br>
+
+Create screen free zones. These zones should be the bedroom, dining table and family gathering spots.  </br>
+
+Decided on screentime timers beforehand and use the device timers to keep track of remaining screen time. </br>
+
+The four main habits are: Balanced nutrition, Regular physical activity, Quality sleep, Stress management and mental wellbeing. </br>
+        </p>
+    </div>
+</section>
+<section id="section5" class="game-section">
+    <button type="button" class="game-exit-button" data-game-exit="snake" aria-label="Exit Nutrition Snake and return to start screen" title="Exit game">×</button>
+    <h2 class="section-title">
+        Nutrition Snake
+    </h2>
+    <div class="game-box">
+        <div class="game-intro">
+            <h3>
+                Nutrition Snake
+            </h3>
+            <p>
+                Choose your food wisely!
+                Eat nutritious foods and water while
+                avoiding unhealthy foods.
+            </p>
+        </div>
+        <div class="game-hud">
+            <div class="score">
+                Score:
+                <span id="score">0</span>
+            </div>
+            <div class="high-score">
+                Best:
+                <span id="highScore">0</span>
+            </div>
+        </div>
+        <div class="canvas-wrapper">
+            <canvas
+                id="snakeCanvas"
+                width="440"
+                height="440"
+            ></canvas>
+            <div
+                id="gameOverlay"
+                class="game-overlay"
+            >
+                <div class="overlay-content">
+                    <h2 id="overlayTitle">
+                        Game Over!
+                    </h2>
+                    <p id="overlayMessage">
+                        Your final score was 0.
+                    </p>
+                    <button
+                        class="game-button"
+                        onclick="startGame()"
+                    >
+                        Play Again
+                    </button>
+                </div>
+            </div>
+        </div>
+        <div class="game-controls">
+            <button
+                class="game-button"
+                onclick="startGame()"
+            >
+                Start / Restart
+            </button>
+            <button
+                class="game-button"
+                onclick="togglePause()"
+            >
+                Pause
+            </button>
+        </div>
+        <div class="game-info">
+            <div class="info-card">
+                <span class="emoji">
+                    🍎
+                </span>
+                <strong>
+                    Healthy Food
+                </strong>
+                <span>
+                    +1 point &nbsp; • &nbsp; Grow
+                </span>
+            </div>
+            <div class="info-card">
+                <span class="emoji">
+                    💧
+                </span>
+                <strong>
+                    Water
+                </strong>
+                <span>
+                    +2 points &nbsp; • &nbsp; Extra growth
+                </span>
+            </div>
+            <div class="info-card">
+                <span class="emoji">
+                    🍔
+                </span>
+                <strong>
+                    Junk Food
+                </strong>
+                <span>
+                    -2 points &nbsp; • &nbsp; Shrinks
+                </span>
+            </div>
+        </div>
+        <p class="instructions">
+            <strong>Controls:</strong>
+            Arrow Keys / WASD
+            &nbsp; • &nbsp;
+            Space = Pause
+            &nbsp; • &nbsp;
+            Mobile = Swipe
+        </p>
+    </div>
+</section>
+<section id="section6" class="game-section">
+    <button type="button" class="game-exit-button" data-game-exit="pixel" aria-label="Exit Pixel Food Challenge and return to start screen" title="Exit game">×</button>
+    <h2 class="section-title">Game 2: Pixel Food Challenge</h2>
+    <div class="game-box">
+        <div class="game-intro">
+            <h3>Pixel Food Challenge</h3>
+            <p>Name the mystery food before the picture becomes clear. You get three guesses per round and can skip if you're stuck.</p>
+        </div>
+        <div id="game2-root">
+            <div class="g2-panel">
+                <h3 class="g2-title">Pixel Food Challenge</h3>
+                <p class="g2-subtitle">Type your guess before the image becomes clear!</p>
+                <div class="g2-stats">
+                    <span>Score: <strong id="g2-score">0</strong></span>
+                    <span>Time: <strong id="g2-time">20</strong>s</span>
+                    <span>Round: <strong id="g2-round">1</strong>/30</span>
+                </div>
+                <div class="g2-image-container">
+                    <img id="g2-food-image" alt="Mystery food">
+                    <div id="g2-pixel-overlay" aria-hidden="true"></div>
+                </div>
+                <div class="g2-timer-bar" aria-label="Time remaining"><div id="g2-timer-fill"></div></div>
+                <div class="g2-guess-area">
+                    <input id="g2-guess-input" type="text" placeholder="Type the food's name..." autocomplete="off" aria-label="Your guess">
+                    <button type="button" id="g2-guess-button">Guess</button>
+                    <button type="button" id="g2-skip-button">Skip</button>
+                </div>
+                <div id="g2-message" aria-live="polite">Press Start Game to begin!</div>
+                <div id="g2-strikes">Wrong guesses: 0 / 3</div>
+                <p class="g2-note">Fruit, vegetables, snacks and takeaway foods can all appear.</p>
+            </div>
+            <div id="g2-start-screen" class="g2-overlay">
+                <div class="g2-overlay-box">
+                    <h3>Pixel Food Challenge</h3>
+                    <p>30 rounds of mystery foods. Pictures start blurry and become clearer over 20 seconds.</p>
+                    <p>You get 3 guesses per round. Skip if you're stuck!</p>
+                    <button type="button" class="g2-main-button" id="g2-start-button">Start Game</button>
+                </div>
+            </div>
+            <div id="g2-end-screen" class="g2-overlay g2-hidden">
+                <div class="g2-overlay-box">
+                    <h3 id="g2-end-title">Challenge Complete!</h3>
+                    <p id="g2-end-summary"></p>
+                    <button type="button" class="g2-main-button" id="g2-restart-button">Play Again</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+<section id="section7" class="game-section">
+    <button type="button" class="game-exit-button" data-game-exit="fruit" aria-label="Exit Fruit Ninja and return to start screen" title="Exit game">×</button>
+    <h2 class="section-title">Game 3: Fruit Ninja</h2>
+    <div class="game-box">
+        <div class="game-intro">
+            <h3>Fruit Ninja</h3>
+            <p>Move your mouse over fruit to slice it, or tap fruit on a touchscreen. Slice fruit for points and avoid bombs.</p>
+        </div>
+        <div id="game3-root">
+            <div class="g3-header">
+                <h3>Fruit Ninja</h3>
+                <div class="g3-stats">
+                    <span>Score: <strong id="g3-score">0</strong></span>
+                    <span id="g3-timer">Time: 30</span>
+                </div>
+                <div id="g3-message" aria-live="polite">Get ready to slice!</div>
+            </div>
+            <div id="g3-game-area"></div>
+            <div id="g3-overlay">
+                <h3 id="g3-overlay-title">Ready, Ninja?</h3>
+                <p id="g3-overlay-text">Move your mouse over fruit to slice it. No clicking needed! Avoid bombs. You have 30 seconds.</p>
+                <button type="button" id="g3-start-button">Start Game</button>
+            </div>
+        </div>
+    </div>
+</section>
+</main>
+<footer>
+    Health & Nutrition Website
+</footer>
+<script src="script.js"></script>
+</body>
+</html>
