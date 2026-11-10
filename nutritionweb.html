@@ -1,0 +1,2389 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Health & Nutrition</title>
+<style>
+:root {
+    --background: #f0f2f1;
+    --card: #ffffff;
+    --text: #29272d;
+    --secondary-text: #69656d;
+    --green: #4f8f68;
+    --green-dark: #39704f;
+    --purple: #8064a9;
+    --purple-dark: #684c91;
+    --nav: #ffffff;
+    --border: #dcd9df;
+    --shadow: rgba(55,45,65,0.12);
+    --game-background: #eef3ef;
+    --snake-head: #39704f;
+    --snake-body: #4f8f68;
+    --grid: rgba(79,143,104,0.08);
+}
+body.dark-mode {
+    --background: #19181c;
+    --card: #25232a;
+    --text: #f0eef3;
+    --secondary-text: #b8b4bd;
+    --green: #69b487;
+    --green-dark: #4f9b6d;
+    --purple: #a184c9;
+    --purple-dark: #876bb0;
+    --nav: #242229;
+    --border: #3b3842;
+    --shadow: rgba(0,0,0,0.35);
+    --game-background: #1d2520;
+    --snake-head: #69b487;
+    --snake-body: #4f9b6d;
+    --grid: rgba(105,180,135,0.08);
+}
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+html {
+    scroll-behavior: smooth;
+    scroll-padding-top: 80px;
+}
+body {
+    font-family: Arial, Helvetica, sans-serif;
+    background: var(--background);
+    color: var(--text);
+    line-height: 1.6;
+    transition: background 0.3s ease, color 0.3s ease;
+}
+header {
+    text-align: center;
+    padding: 30px 20px 24px;
+    background: linear-gradient(
+        135deg,
+        var(--green),
+        var(--purple)
+    );
+    color: white;
+}
+header h1 {
+    font-size: clamp(2rem,5vw,3rem);
+    margin-bottom: 5px;
+}
+header p {
+    font-size: 1rem;
+    opacity: 0.92;
+}
+nav {
+    position: sticky;
+    top: 0;
+    z-index: 1000;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 8px;
+    padding: 9px 12px;
+    background: var(--nav);
+    border-bottom: 1px solid var(--border);
+    box-shadow: 0 3px 12px var(--shadow);
+}
+.nav-links {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 7px;
+}
+nav a {
+    text-decoration: none;
+    color: var(--text);
+    padding: 7px 13px;
+    border-radius: 9px;
+    font-size: 0.88rem;
+    font-weight: bold;
+    transition:
+        background 0.2s ease,
+        color 0.2s ease,
+        transform 0.15s ease;
+}
+nav a:hover {
+    background: var(--green);
+    color: white;
+    transform: translateY(-2px);
+}
+nav a:active {
+    transform: scale(0.94);
+}
+#themeButton {
+    width: 36px;
+    height: 36px;
+    border: none;
+    border-radius: 10px;
+    background: var(--green);
+    color: white;
+    font-size: 18px;
+    cursor: pointer;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    transition:
+        transform 0.2s ease,
+        background 0.2s ease;
+}
+#themeButton:hover {
+    background: var(--purple);
+    transform: rotate(12deg) scale(1.08);
+}
+#themeButton:active {
+    transform: scale(0.88);
+}
+main {
+    width: min(1000px, calc(100% - 28px));
+    margin: 20px auto 40px;
+}
+section {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 17px;
+    padding: 20px;
+    margin-bottom: 18px;
+    box-shadow: 0 5px 18px var(--shadow);
+    animation: sectionAppear 0.5s ease both;
+}
+@keyframes sectionAppear {
+    from {
+        opacity: 0;
+        transform: translateY(12px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+.game-section {
+    position: relative;
+    padding-top: 54px;
+}
+.game-exit-button {
+    position: absolute;
+    top: 12px;
+    left: 12px;
+    z-index: 20;
+    width: 34px;
+    height: 34px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    background: var(--background);
+    color: var(--text);
+    font-size: 25px;
+    line-height: 1;
+    cursor: pointer;
+    transition: background .15s ease, transform .15s ease;
+}
+.game-exit-button:hover {
+    background: var(--purple);
+    color: white;
+    transform: scale(1.06);
+}
+.game-exit-button:focus-visible { outline: 3px solid var(--green); outline-offset: 2px; }
+.section-title {
+    color: var(--green);
+    font-size: 1.65rem;
+    margin-bottom: 12px;
+}
+section:nth-child(even) .section-title {
+    color: var(--purple);
+}
+.content-box {
+    min-height: 110px;
+    border-radius: 12px;
+    padding: 17px;
+    background: var(--background);
+    border: 1px solid var(--border);
+    color: var(--secondary-text);
+}
+.game-box {
+    background: var(--game-background);
+    border: 2px dashed var(--purple);
+    border-radius: 15px;
+    padding: 18px;
+}
+.game-intro {
+    text-align: center;
+    margin-bottom: 15px;
+}
+.game-intro h3 {
+    font-size: 1.45rem;
+    color: var(--purple);
+    margin-bottom: 4px;
+}
+.game-intro p {
+    color: var(--secondary-text);
+    font-size: 0.93rem;
+}
+.game-hud {
+    width: min(440px,100%);
+    margin: 0 auto 10px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 9px 13px;
+}
+.score {
+    font-weight: bold;
+    color: var(--green);
+}
+.high-score {
+    font-weight: bold;
+    color: var(--purple);
+}
+.canvas-wrapper {
+    position: relative;
+    width: min(440px,100%);
+    margin: 0 auto;
+}
+#snakeCanvas {
+    display: block;
+    width: 100%;
+    aspect-ratio: 1 / 1;
+    background: var(--game-background);
+    border: 3px solid var(--green);
+    border-radius: 14px;
+    touch-action: none;
+    box-shadow: 0 5px 18px var(--shadow);
+}
+.game-overlay {
+    position: absolute;
+    inset: 0;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    border-radius: 12px;
+    background: rgba(20,20,25,0.72);
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.25s ease;
+}
+.game-overlay.show {
+    opacity: 1;
+    pointer-events: auto;
+}
+.overlay-content {
+    text-align: center;
+    color: white;
+    padding: 20px;
+}
+.overlay-content h2 {
+    font-size: 2rem;
+    margin-bottom: 5px;
+}
+.overlay-content p {
+    margin-bottom: 13px;
+}
+.game-controls {
+    display: flex;
+    justify-content: center;
+    gap: 8px;
+    margin-top: 11px;
+}
+.game-button {
+    border: none;
+    border-radius: 10px;
+    padding: 10px 18px;
+    background: var(--green);
+    color: white;
+    font-size: 0.95rem;
+    font-weight: bold;
+    cursor: pointer;
+    transition:
+        transform 0.15s ease,
+        background 0.2s ease;
+}
+.game-button:hover {
+    background: var(--green-dark);
+    transform: translateY(-2px);
+}
+.game-button:active {
+    transform: scale(0.93);
+}
+.game-info {
+    width: min(700px,100%);
+    margin: 17px auto 0;
+    display: grid;
+    grid-template-columns:
+        repeat(3,1fr);
+    gap: 9px;
+}
+.info-card {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 11px;
+    padding: 10px;
+    text-align: center;
+}
+.info-card .emoji {
+    font-size: 1.4rem;
+    display: block;
+    margin-bottom: 2px;
+}
+.info-card strong {
+    display: block;
+    font-size: 0.85rem;
+    margin-bottom: 2px;
+}
+.info-card span {
+    color: var(--secondary-text);
+    font-size: 0.76rem;
+}
+.instructions {
+    text-align: center;
+    color: var(--secondary-text);
+    font-size: 0.82rem;
+    margin-top: 12px;
+}
+footer {
+    text-align: center;
+    padding: 20px;
+    color: var(--secondary-text);
+    font-size: 0.82rem;
+}
+@media (max-width:600px) {
+    nav {
+        gap: 5px;
+        padding: 7px;
+    }
+    .nav-links {
+        gap: 3px;
+    }
+    nav a {
+        padding: 6px 8px;
+        font-size: 0.75rem;
+    }
+    #themeButton {
+        width: 33px;
+        height: 33px;
+        flex-shrink: 0;
+    }
+    main {
+        width: min(100% - 16px,1000px);
+        margin-top: 12px;
+    }
+    section {
+        padding: 14px;
+        border-radius: 14px;
+        margin-bottom: 12px;
+    }
+    .section-title {
+        font-size: 1.4rem;
+    }
+    .game-box {
+        padding: 12px;
+    }
+    .game-info {
+        grid-template-columns: 1fr;
+    }
+    .game-hud {
+        font-size: 0.85rem;
+    }
+}
+
+/* Game-specific styles below are kept in one place to avoid conflicting duplicates. */
+/* Game 2: Pixel Food Challenge (styles are scoped to this game) */
+#game2-root {
+    position: relative;
+    isolation: isolate;
+    width: 100%;
+    max-width: 850px;
+    min-height: 540px;
+    margin: 0 auto;
+    border-radius: 18px;
+    color: #243047;
+    background: #f7fbf8;
+    overflow: hidden;
+    font-family: Arial, Helvetica, sans-serif;
+    line-height: 1.45;
+}
+#game2-root * { box-sizing: border-box; }
+#game2-root .g2-panel {
+    padding: clamp(12px, 3vw, 24px);
+    text-align: center;
+}
+#game2-root .g2-title { margin: 0 0 7px; font-size: clamp(24px, 4vw, 36px); color: #243047; }
+#game2-root .g2-subtitle { margin: 0 0 16px; color: #667085; }
+#game2-root .g2-stats {
+    display: flex; justify-content: space-around; flex-wrap: wrap; gap: 10px;
+    padding: 12px 8px; margin-bottom: 15px; border-radius: 12px;
+    background: #eaf2ed; font-weight: bold;
+}
+#game2-root .g2-image-container {
+    position: relative; height: clamp(210px, 35vw, 330px); overflow: hidden;
+    border-radius: 16px; background: #e6e6e6; margin-bottom: 14px;
+}
+#game2-root #g2-food-image {
+    display: block; width: 100%; height: 100%; object-fit: cover;
+    filter: blur(24px); transform: scale(1.08);
+}
+#game2-root #g2-pixel-overlay {
+    position: absolute; inset: 0; pointer-events: none; opacity: 1;
+    background-image: linear-gradient(#0002 1px, transparent 1px), linear-gradient(90deg, #0002 1px, transparent 1px);
+    background-size: 20px 20px;
+}
+#game2-root .g2-timer-bar { height: 10px; background: #e4e7ec; border-radius: 20px; overflow: hidden; margin-bottom: 16px; }
+#game2-root #g2-timer-fill { width: 100%; height: 100%; background: #35b56a; transition: width .1s linear; }
+#game2-root .g2-guess-area { display: flex; gap: 9px; }
+#game2-root input {
+    flex: 1; min-width: 0; padding: 12px; border: 2px solid #d0d5dd;
+    border-radius: 10px; font: inherit; font-size: 16px; color: #243047; background: white;
+}
+#game2-root input:focus { outline: 2px solid #35b56a; outline-offset: 1px; }
+#game2-root button {
+    border: 0; border-radius: 10px; padding: 12px 17px; font: inherit;
+    font-weight: bold; cursor: pointer; transition: transform .15s, opacity .15s;
+}
+#game2-root button:hover { transform: translateY(-1px); }
+#game2-root button:disabled { opacity: .55; cursor: default; transform: none; }
+#game2-root #g2-guess-button, #game2-root .g2-main-button { color: white; background: #279b53; }
+#game2-root #g2-skip-button { color: #402900; background: #ffbd50; }
+#game2-root #g2-message { min-height: 28px; margin-top: 12px; font-weight: bold; }
+#game2-root #g2-strikes { margin: 7px 0 12px; }
+#game2-root .g2-note { margin: 0; color: #667085; font-size: 13px; }
+#game2-root .g2-overlay {
+    position: absolute; inset: 0; z-index: 5; padding: 18px;
+    display: flex; justify-content: center; align-items: center;
+    background: #172033d9; text-align: center;
+}
+#game2-root .g2-overlay-box {
+    width: 100%; max-width: 480px; padding: clamp(20px, 4vw, 32px);
+    border-radius: 20px; background: white; color: #243047;
+}
+#game2-root .g2-overlay-box h3 { color: #243047; font-size: clamp(26px, 4vw, 35px); margin: 0 0 12px; }
+#game2-root .g2-overlay-box p { line-height: 1.6; margin: 8px 0; }
+#game2-root .g2-main-button { margin-top: 14px; padding: 13px 25px; }
+#game2-root .g2-hidden { display: none !important; }
+#game2-root .g2-correct { background: #d1fae0 !important; }
+#game2-root .g2-wrong { background: #ffd9d9 !important; }
+@media (max-width: 560px) {
+    #game2-root { min-height: 0; }
+    #game2-root .g2-panel { padding: 12px; }
+    #game2-root .g2-guess-area { flex-wrap: wrap; }
+    #game2-root input { flex-basis: 100%; }
+    #game2-root #g2-guess-button, #game2-root #g2-skip-button { flex: 1; }
+    #game2-root .g2-stats { font-size: 14px; }
+}
+
+/* Game 3: Fruit Ninja (styles are scoped to this game) */
+#game3-root {
+    position: relative; isolation: isolate; width: 100%; max-width: 900px;
+    height: clamp(420px, 65vh, 620px); min-height: 420px; margin: 0 auto;
+    overflow: hidden; border: 3px solid #a9ff83; border-radius: 17px;
+    color: white; background: linear-gradient(#123d30, #0b2b22);
+    font-family: Arial, Helvetica, sans-serif; line-height: 1.4;
+}
+#game3-root * { box-sizing: border-box; }
+#game3-root .g3-header {
+    position: relative; z-index: 2; min-height: 94px; padding: 8px 12px;
+    text-align: center; background: #123b2c; border-bottom: 2px solid #a9ff83;
+}
+#game3-root .g3-header h3 { color: #a9ff83; font-size: clamp(22px, 4vw, 30px); margin: 0 0 3px; }
+#game3-root .g3-stats { display: flex; justify-content: center; gap: 22px; flex-wrap: wrap; font-size: 17px; font-weight: bold; }
+#game3-root #g3-timer { color: #ffe66d; }
+#game3-root #g3-message { min-height: 22px; font-size: 14px; font-weight: bold; color: #ffe66d; }
+#game3-root #g3-game-area {
+    position: absolute; inset: 94px 0 0; overflow: hidden;
+    background: radial-gradient(ellipse at bottom, #26734b 0%, transparent 65%), linear-gradient(#123d30, #0b2b22);
+    cursor: crosshair; touch-action: none;
+}
+#game3-root .g3-fruit {
+    position: absolute; z-index: 1; font-size: 55px; line-height: 1;
+    cursor: crosshair; user-select: none; touch-action: none;
+    filter: drop-shadow(0 5px 4px #0007); will-change: left, top;
+}
+#game3-root .g3-fruit:hover { filter: drop-shadow(0 0 12px #ffffffaa); }
+#game3-root .g3-slash {
+    position: absolute; z-index: 3; pointer-events: none; font-size: 30px;
+    font-weight: bold; color: white; animation: g3-slash-fade .35s forwards;
+}
+@keyframes g3-slash-fade {
+    from { opacity: 1; transform: scale(.6) rotate(-20deg); }
+    to { opacity: 0; transform: scale(1.5) rotate(20deg); }
+}
+#game3-root #g3-overlay {
+    position: absolute; inset: 0; z-index: 5; display: flex; flex-direction: column;
+    align-items: center; justify-content: center; gap: 12px; padding: 20px;
+    background: #061b15e8; text-align: center;
+}
+#game3-root #g3-overlay h3 { margin: 0; color: #a9ff83; font-size: clamp(28px, 5vw, 44px); }
+#game3-root #g3-overlay p { max-width: 420px; font-size: 17px; line-height: 1.5; }
+#game3-root #g3-start-button {
+    border: 0; border-radius: 11px; padding: 13px 25px; background: #a9ff83;
+    color: #123b24; font-size: 17px; font-weight: bold; cursor: pointer;
+}
+#game3-root #g3-start-button:hover { background: #d0ffb8; transform: scale(1.03); }
+#game3-root .g3-hidden { display: none !important; }
+@media (max-width: 500px) {
+    #game3-root { height: 470px; min-height: 420px; }
+    #game3-root .g3-stats { gap: 12px; font-size: 15px; }
+    #game3-root .g3-fruit { font-size: 45px; }
+}
+
+</style>
+</head>
+<body>
+<header>
+    <h1>Health & Nutrition</h1>
+    <p>
+        Learn about making healthy choices for your body and lifestyle.
+    </p>
+</header>
+<nav>
+    <div class="nav-links">
+        <a href="#section1">Nutrition</a>
+        <a href="#section2">Healthy Eating</a>
+        <a href="#section3">Health</a>
+        <a href="#section4">Lifestyle</a>
+        <a href="#section5">Nutrition Snake</a>
+        <a href="#section6">Game 2</a>
+        <a href="#section7">Game 3</a>
+    </div>
+    <button
+        id="themeButton"
+        onclick="toggleTheme()"
+        aria-label="Toggle dark mode"
+    >
+        ☾
+    </button>
+</nav>
+<main>
+<section id="section1">
+    <h2 class="section-title">
+        Nutrition
+    </h2>
+    <div class="content-box">
+        <p>
+            <strong>Important information about nutrition</strong>
+        </p>
+        <p>
+Nutrients: Essential food compounds required for life, growth, and bodily repair. </br>
+
+Macronutrients: Large-scale nutrients that provide your body with energy in the form of calories. </br>
+
+Carbohydrates: The body's primary and fastest fuel source, providing 4 calories per gram. </br>
+
+Proteins: Structural building blocks made of amino acids that repair muscles and organs, providing 4 calories per gram. </br>
+
+Fats: Sources for cell health, hormone production, and nutrient absorption, providing 9 calories per gram. </br>
+
+Micronutrients: Low-dose vitamins and minerals required to keep your metabolism and organs running smoothly. </br>
+
+Vitamins: Organic compounds split into water-soluble and fat-soluble categories that regulate cellular processes. </br>
+
+Minerals: Inorganic elements necessary for structural bone health, nerve signals, and fluid balance. </br>
+
+Water: A zero-calorie essential that regulates body temperature and transports nutrients to cells. </br>
+        </p>
+    </div>
+</section>
+<section id="section2">
+    <h2 class="section-title">
+        Healthy Eating
+    </h2>
+    <div class="content-box">
+        <p>
+            <strong>Important information on healthy eating</strong>
+        </p>
+        <p>
+Tips for eating healthy: </br>
+
+Eat regularly </br>
+
+Don’t skip breakfast </br>
+
+Eat with other people not the tv </br>
+
+This helps because eating with other people usually includes more food groups and makes you eat more regularly. </br>
+</br>
+Building a balanced plate: </br>
+
+Half your plate should be fruits and veg, potatoes dot count. </br>
+
+A quarter of the plate should be wholegrains like brown rice, oats, whole-wheat pasta or whole grain bread. </br>
+
+The last quarter on the plate should be filled with healthy protein like fish, poultry, beans, lentils, nuts, seeds, eggs or tofu. And limit red meats like bacon and sausage. </br>
+
+Cooking with oils like avocado oil, extra virgin olive oil and canola oil are good because they are healthy fats. </br>
+</br>
+Diet: </br>
+
+Drink lots of water, tea or coffee, less sugary drinks and energy drinks.  </br>
+
+Cut back on sugars, sodium and saturated fats. </br>
+
+Watch how much you eat and try cook at home because you can see what goes in it. </br>
+        </p>
+    </div>
+</section>
+<section id="section3">
+    <h2 class="section-title">
+        Health
+    </h2>
+    <div class="content-box">
+        <p>
+            <strong>Important information on health</strong>
+        </p>
+        <p>
+Physical Health: It can benefit your physical health by improving your bodies overall condition allowing you to perform usual day to day activities with fatigue and stress. </br>
+
+Mental Health: It can benefit your mental health by improving your wellbeing, reducing stress and improving your decision making. </br>
+
+Disease Prevention: It can improve your disease prevention by supplying your body with micronutrients and fibres that can help regulate your metabolism and support the immune system. </br>
+
+ 
+
+Benefits of eating certain food:  </br>
+
+Berries: Support Health and Brain functions </br>
+
+Greens such as spinach: Protect eye health and lower blood levels </br>
+
+Almonds and Walnuts: Benefits your heart and brain. </br>
+
+Oily Fish: Reduce the risk of heart disease and support cellular health </br>
+
+Legumes such as beans: offer high dietary fibre to aid blood sugar control and gut health. </br>
+
+Avocados: Improve heart health </br>
+        </p>
+    </div>
+</section>
+<section id="section4">
+    <h2 class="section-title">
+        Lifestyle
+    </h2>
+    <div class="content-box">
+        <p>
+            <strong>Important information on Lifestyle</strong>
+        </p>
+        <p>
+Adults need 7 to 9 hours of uninterrupted sleep. </br>
+
+Maintain a constant sleep schedule of sleeping and waking at similar if not the same times. </br>
+
+Avoid heavy meals, caffeine, nicotine and alcohol close to when going to sleep. </br>
+
+Turn off phones, laptops, and computers 1 to 2 hours before going to sleep as blue light can trick your brain into staying awake. </br>
+
+Exercising regularly can reduce stress. Moving your body for at least 30 minutes a day or aim for 150 minutes of moderate activity.  </br>
+
+Focusing on what you can control can help lower stress. This can be done by denying extra plans, denying a drink or denying playing too many games. </br>
+
+Create screen free zones. These zones should be the bedroom, dining table and family gathering spots.  </br>
+
+Decided on screentime timers beforehand and use the device timers to keep track of remaining screen time. </br>
+
+The four main habits are: Balanced nutrition, Regular physical activity, Quality sleep, Stress management and mental wellbeing. </br>
+        </p>
+    </div>
+</section>
+<section id="section5" class="game-section">
+    <button type="button" class="game-exit-button" data-game-exit="snake" aria-label="Exit Nutrition Snake and return to start screen" title="Exit game">×</button>
+    <h2 class="section-title">
+        Nutrition Snake
+    </h2>
+    <div class="game-box">
+        <div class="game-intro">
+            <h3>
+                Nutrition Snake
+            </h3>
+            <p>
+                Choose your food wisely!
+                Eat nutritious foods and water while
+                avoiding unhealthy foods.
+            </p>
+        </div>
+        <div class="game-hud">
+            <div class="score">
+                Score:
+                <span id="score">0</span>
+            </div>
+            <div class="high-score">
+                Best:
+                <span id="highScore">0</span>
+            </div>
+        </div>
+        <div class="canvas-wrapper">
+            <canvas
+                id="snakeCanvas"
+                width="440"
+                height="440"
+            ></canvas>
+            <div
+                id="gameOverlay"
+                class="game-overlay"
+            >
+                <div class="overlay-content">
+                    <h2 id="overlayTitle">
+                        Game Over!
+                    </h2>
+                    <p id="overlayMessage">
+                        Your final score was 0.
+                    </p>
+                    <button
+                        class="game-button"
+                        onclick="startGame()"
+                    >
+                        Play Again
+                    </button>
+                </div>
+            </div>
+        </div>
+        <div class="game-controls">
+            <button
+                class="game-button"
+                onclick="startGame()"
+            >
+                Start / Restart
+            </button>
+            <button
+                class="game-button"
+                onclick="togglePause()"
+            >
+                Pause
+            </button>
+        </div>
+        <div class="game-info">
+            <div class="info-card">
+                <span class="emoji">
+                    🍎
+                </span>
+                <strong>
+                    Healthy Food
+                </strong>
+                <span>
+                    +1 point &nbsp; • &nbsp; Grow
+                </span>
+            </div>
+            <div class="info-card">
+                <span class="emoji">
+                    💧
+                </span>
+                <strong>
+                    Water
+                </strong>
+                <span>
+                    +2 points &nbsp; • &nbsp; Extra growth
+                </span>
+            </div>
+            <div class="info-card">
+                <span class="emoji">
+                    🍔
+                </span>
+                <strong>
+                    Junk Food
+                </strong>
+                <span>
+                    -2 points &nbsp; • &nbsp; Shrinks
+                </span>
+            </div>
+        </div>
+        <p class="instructions">
+            <strong>Controls:</strong>
+            Arrow Keys / WASD
+            &nbsp; • &nbsp;
+            Space = Pause
+            &nbsp; • &nbsp;
+            Mobile = Swipe
+        </p>
+    </div>
+</section>
+<section id="section6" class="game-section">
+    <button type="button" class="game-exit-button" data-game-exit="pixel" aria-label="Exit Pixel Food Challenge and return to start screen" title="Exit game">×</button>
+    <h2 class="section-title">Game 2: Pixel Food Challenge</h2>
+    <div class="game-box">
+        <div class="game-intro">
+            <h3>Pixel Food Challenge</h3>
+            <p>Name the mystery food before the picture becomes clear. You get three guesses per round and can skip if you're stuck.</p>
+        </div>
+        <div id="game2-root">
+            <div class="g2-panel">
+                <h3 class="g2-title">Pixel Food Challenge</h3>
+                <p class="g2-subtitle">Type your guess before the image becomes clear!</p>
+                <div class="g2-stats">
+                    <span>Score: <strong id="g2-score">0</strong></span>
+                    <span>Time: <strong id="g2-time">20</strong>s</span>
+                    <span>Round: <strong id="g2-round">1</strong>/30</span>
+                </div>
+                <div class="g2-image-container">
+                    <img id="g2-food-image" alt="Mystery food">
+                    <div id="g2-pixel-overlay" aria-hidden="true"></div>
+                </div>
+                <div class="g2-timer-bar" aria-label="Time remaining"><div id="g2-timer-fill"></div></div>
+                <div class="g2-guess-area">
+                    <input id="g2-guess-input" type="text" placeholder="Type the food's name..." autocomplete="off" aria-label="Your guess">
+                    <button type="button" id="g2-guess-button">Guess</button>
+                    <button type="button" id="g2-skip-button">Skip</button>
+                </div>
+                <div id="g2-message" aria-live="polite">Press Start Game to begin!</div>
+                <div id="g2-strikes">Wrong guesses: 0 / 3</div>
+                <p class="g2-note">Fruit, vegetables, snacks and takeaway foods can all appear.</p>
+            </div>
+            <div id="g2-start-screen" class="g2-overlay">
+                <div class="g2-overlay-box">
+                    <h3>Pixel Food Challenge</h3>
+                    <p>30 rounds of mystery foods. Pictures start blurry and become clearer over 20 seconds.</p>
+                    <p>You get 3 guesses per round. Skip if you're stuck!</p>
+                    <button type="button" class="g2-main-button" id="g2-start-button">Start Game</button>
+                </div>
+            </div>
+            <div id="g2-end-screen" class="g2-overlay g2-hidden">
+                <div class="g2-overlay-box">
+                    <h3 id="g2-end-title">Challenge Complete!</h3>
+                    <p id="g2-end-summary"></p>
+                    <button type="button" class="g2-main-button" id="g2-restart-button">Play Again</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+<section id="section7" class="game-section">
+    <button type="button" class="game-exit-button" data-game-exit="fruit" aria-label="Exit Fruit Ninja and return to start screen" title="Exit game">×</button>
+    <h2 class="section-title">Game 3: Fruit Ninja</h2>
+    <div class="game-box">
+        <div class="game-intro">
+            <h3>Fruit Ninja</h3>
+            <p>Move your mouse over fruit to slice it, or tap fruit on a touchscreen. Slice fruit for points and avoid bombs.</p>
+        </div>
+        <div id="game3-root">
+            <div class="g3-header">
+                <h3>Fruit Ninja</h3>
+                <div class="g3-stats">
+                    <span>Score: <strong id="g3-score">0</strong></span>
+                    <span id="g3-timer">Time: 30</span>
+                </div>
+                <div id="g3-message" aria-live="polite">Get ready to slice!</div>
+            </div>
+            <div id="g3-game-area"></div>
+            <div id="g3-overlay">
+                <h3 id="g3-overlay-title">Ready, Ninja?</h3>
+                <p id="g3-overlay-text">Move your mouse over fruit to slice it. No clicking needed! Avoid bombs. You have 30 seconds.</p>
+                <button type="button" id="g3-start-button">Start Game</button>
+            </div>
+        </div>
+    </div>
+</section>
+</main>
+<footer>
+    Health & Nutrition Website
+</footer>
+<script>
+function toggleTheme() {
+    document.body.classList.toggle("dark-mode");
+    const button =
+        document.getElementById("themeButton");
+    if (
+        document.body.classList.contains("dark-mode")
+    ) {
+        button.textContent = "☀";
+    } else {
+        button.textContent = "☾";
+    }
+    drawGame();
+}
+const canvas =
+    document.getElementById("snakeCanvas");
+const ctx =
+    canvas.getContext("2d");
+const scoreDisplay =
+    document.getElementById("score");
+const highScoreDisplay =
+    document.getElementById("highScore");
+const overlay =
+    document.getElementById("gameOverlay");
+const overlayTitle =
+    document.getElementById("overlayTitle");
+const overlayMessage =
+    document.getElementById("overlayMessage");
+const gridSize = 20;
+const tileSize =
+    canvas.width / gridSize;
+let snake = [];
+let direction = {
+    x: 1,
+    y: 0
+};
+let nextDirection = {
+    x: 1,
+    y: 0
+};
+let foods = [];
+let score = 0;
+function loadSavedHighScore() {
+    try {
+        return Number(window.localStorage.getItem("nutritionSnakeHighScore")) || 0;
+    } catch (error) {
+        // Some browsers block local storage for local files or private contexts.
+        return 0;
+    }
+}
+function saveHighScore() {
+    try {
+        window.localStorage.setItem("nutritionSnakeHighScore", String(highScore));
+    } catch (error) {
+        // The game remains playable even when saving is unavailable.
+    }
+}
+let highScore = loadSavedHighScore();
+let gameRunning = false;
+let paused = false;
+let gameOver = false;
+let lastMoveTime = 0;
+let moveDelay = 135;
+let snakeAnimationFrame = null;
+const healthyFoods = [
+    {
+        emoji: "🍎",
+        name: "Apple"
+    },
+    {
+        emoji: "🍌",
+        name: "Banana"
+    },
+    {
+        emoji: "🥕",
+        name: "Carrot"
+    },
+    {
+        emoji: "🥦",
+        name: "Broccoli"
+    },
+    {
+        emoji: "🍓",
+        name: "Strawberry"
+    },
+    {
+        emoji: "🍊",
+        name: "Orange"
+    },
+    {
+        emoji: "🥝",
+        name: "Kiwi"
+    },
+    {
+        emoji: "🥑",
+        name: "Avocado"
+    },
+    {
+        emoji: "🍇",
+        name: "Grapes"
+    },
+    {
+        emoji: "🥗",
+        name: "Salad"
+    },
+    {
+        emoji: "🥚",
+        name: "Egg"
+    },
+    {
+        emoji: "🐟",
+        name: "Fish"
+    }
+];
+const junkFoods = [
+    {
+        emoji: "🍔",
+        name: "Burger"
+    },
+    {
+        emoji: "🍕",
+        name: "Pizza"
+    },
+    {
+        emoji: "🍩",
+        name: "Donut"
+    },
+    {
+        emoji: "🍟",
+        name: "Fries"
+    },
+    {
+        emoji: "🍫",
+        name: "Chocolate"
+    },
+    {
+        emoji: "🍭",
+        name: "Lollipop"
+    },
+    {
+        emoji: "🌭",
+        name: "Hot Dog"
+    },
+    {
+        emoji: "🍰",
+        name: "Cake"
+    }
+];
+const waterFood = {
+    emoji: "💧",
+    name: "Water"
+};
+const HEALTHY_COUNT = 3;
+const JUNK_COUNT = 2;
+const WATER_COUNT = 1;
+highScoreDisplay.textContent =
+    highScore;
+function resetSnakeToStart() {
+    gameRunning = false;
+    if (snakeAnimationFrame !== null) {
+        cancelAnimationFrame(snakeAnimationFrame);
+        snakeAnimationFrame = null;
+    }
+    paused = false;
+    gameOver = false;
+    score = 0;
+    scoreDisplay.textContent = "0";
+    overlayTitle.textContent = "Ready to play?";
+    overlayMessage.textContent = "Press Start Game when you're ready. Close this game or scroll away to return here later.";
+    const overlayButton = overlay.querySelector("button");
+    if (overlayButton) overlayButton.textContent = "Start Game";
+    overlay.classList.add("show");
+    drawGame();
+}
+function startGame() {
+    if (snakeAnimationFrame !== null) {
+        cancelAnimationFrame(snakeAnimationFrame);
+        snakeAnimationFrame = null;
+    }
+    snake = [
+        {
+            x: 10,
+            y: 10
+        },
+        {
+            x: 9,
+            y: 10
+        },
+        {
+            x: 8,
+            y: 10
+        },
+        {
+            x: 7,
+            y: 10
+        }
+    ];
+    direction = {
+        x: 1,
+        y: 0
+    };
+    nextDirection = {
+        x: 1,
+        y: 0
+    };
+    score = 0;
+    moveDelay = 135;
+    gameRunning = true;
+    paused = false;
+    gameOver = false;
+    scoreDisplay.textContent =
+        score;
+    overlay.classList.remove(
+        "show"
+    );
+    foods = [];
+    for (
+        let i = 0;
+        i < HEALTHY_COUNT;
+        i++
+    ) {
+        spawnFood("healthy");
+    }
+    for (
+        let i = 0;
+        i < JUNK_COUNT;
+        i++
+    ) {
+        spawnFood("junk");
+    }
+    for (
+        let i = 0;
+        i < WATER_COUNT;
+        i++
+    ) {
+        spawnFood("water");
+    }
+    lastMoveTime =
+        performance.now();
+    snakeAnimationFrame = requestAnimationFrame(gameLoop);
+    drawGame();
+}
+function gameLoop(time) {
+    snakeAnimationFrame = null;
+    if (!gameRunning) {
+        drawGame();
+        return;
+    }
+    if (
+        !paused &&
+        !gameOver
+    ) {
+        if (
+            time - lastMoveTime >=
+            moveDelay
+        ) {
+            moveSnake();
+            lastMoveTime = time;
+        }
+    }
+    // A move can end the game. Do not schedule another frame after game over.
+    if (!gameRunning) {
+        drawGame();
+        return;
+    }
+    drawGame();
+    snakeAnimationFrame = requestAnimationFrame(gameLoop);
+}
+function moveSnake() {
+    direction =
+        nextDirection;
+    const head = {
+        x:
+            snake[0].x +
+            direction.x,
+        y:
+            snake[0].y +
+            direction.y
+    };
+    if (
+        head.x < 0 ||
+        head.x >= gridSize ||
+        head.y < 0 ||
+        head.y >= gridSize
+    ) {
+        endGame(
+            "You hit the wall!"
+        );
+        return;
+    }
+    for (
+        let i = 0;
+        i < snake.length;
+        i++
+    ) {
+        if (
+            head.x ===
+            snake[i].x &&
+            head.y ===
+            snake[i].y
+        ) {
+            endGame(
+                "You ran into yourself!"
+            );
+            return;
+        }
+    }
+    snake.unshift(head);
+    let eatenFood = null;
+    for (
+        let i = 0;
+        i < foods.length;
+        i++
+    ) {
+        if (
+            head.x ===
+            foods[i].x &&
+            head.y ===
+            foods[i].y
+        ) {
+            eatenFood =
+                foods[i];
+            break;
+        }
+    }
+    if (eatenFood) {
+        eatFood(
+            eatenFood
+        );
+        foods =
+            foods.filter(
+                item =>
+                    item !==
+                    eatenFood
+            );
+        spawnFood(
+            eatenFood.type
+        );
+    } else {
+        snake.pop();
+    }
+}
+function eatFood(foodItem) {
+    if (
+        foodItem.type ===
+        "healthy"
+    ) {
+        score += 1;
+    }
+    else if (
+        foodItem.type ===
+        "water"
+    ) {
+        score += 2;
+        const tail =
+            snake[
+                snake.length - 1
+            ];
+        snake.push({
+            x: tail.x,
+            y: tail.y
+        });
+    }
+    else if (
+        foodItem.type ===
+        "junk"
+    ) {
+        score -= 2;
+        if (
+            snake.length > 3
+        ) {
+            snake.pop();
+        }
+        if (
+            snake.length > 3
+        ) {
+            snake.pop();
+        }
+        if (
+            snake.length > 3
+        ) {
+            snake.pop();
+        }
+    }
+    if (score < 0) {
+        score = 0;
+    }
+    if (
+        score > highScore
+    ) {
+        highScore =
+            score;
+        saveHighScore();
+        highScoreDisplay.textContent =
+            highScore;
+    }
+    scoreDisplay.textContent =
+        score;
+    moveDelay =
+        Math.max(
+            65,
+            135 -
+            Math.floor(
+                score / 5
+            ) * 6
+        );
+}
+function spawnFood(type) {
+    let position;
+    let attempts = 0;
+    while (
+        attempts < 500
+    ) {
+        position = {
+            x:
+                Math.floor(
+                    Math.random() *
+                    gridSize
+                ),
+            y:
+                Math.floor(
+                    Math.random() *
+                    gridSize
+                )
+        };
+        let occupied = false;
+        for (
+            const segment
+            of snake
+        ) {
+            if (
+                segment.x ===
+                position.x &&
+                segment.y ===
+                position.y
+            ) {
+                occupied = true;
+                break;
+            }
+        }
+        if (!occupied) {
+            for (
+                const existingFood
+                of foods
+            ) {
+                if (
+                    existingFood.x ===
+                    position.x &&
+                    existingFood.y ===
+                    position.y
+                ) {
+                    occupied = true;
+                    break;
+                }
+            }
+        }
+        if (!occupied) {
+            break;
+        }
+        attempts++;
+    }
+    let foodData;
+    if (
+        type ===
+        "healthy"
+    ) {
+        foodData =
+            healthyFoods[
+                Math.floor(
+                    Math.random() *
+                    healthyFoods.length
+                )
+            ];
+    }
+    else if (
+        type ===
+        "junk"
+    ) {
+        foodData =
+            junkFoods[
+                Math.floor(
+                    Math.random() *
+                    junkFoods.length
+                )
+            ];
+    }
+    else {
+        foodData =
+            waterFood;
+    }
+    foods.push({
+        x:
+            position.x,
+        y:
+            position.y,
+        type:
+            type,
+        emoji:
+            foodData.emoji,
+        name:
+            foodData.name
+    });
+}
+function drawGame() {
+    const styles =
+        getComputedStyle(
+            document.body
+        );
+    const background =
+        styles.getPropertyValue(
+            "--game-background"
+        );
+    const grid =
+        styles.getPropertyValue(
+            "--grid"
+        );
+    const snakeHead =
+        styles.getPropertyValue(
+            "--snake-head"
+        );
+    const snakeBody =
+        styles.getPropertyValue(
+            "--snake-body"
+        );
+    ctx.fillStyle =
+        background;
+    ctx.fillRect(
+        0,
+        0,
+        canvas.width,
+        canvas.height
+    );
+    ctx.strokeStyle =
+        grid;
+    ctx.lineWidth = 1;
+    for (
+        let x = 0;
+        x <= gridSize;
+        x++
+    ) {
+        ctx.beginPath();
+        ctx.moveTo(
+            x * tileSize,
+            0
+        );
+        ctx.lineTo(
+            x * tileSize,
+            canvas.height
+        );
+        ctx.stroke();
+    }
+    for (
+        let y = 0;
+        y <= gridSize;
+        y++
+    ) {
+        ctx.beginPath();
+        ctx.moveTo(
+            0,
+            y * tileSize
+        );
+        ctx.lineTo(
+            canvas.width,
+            y * tileSize
+        );
+        ctx.stroke();
+    }
+    for (
+        const food
+        of foods
+    ) {
+        let outline;
+        if (
+            food.type ===
+            "healthy"
+        ) {
+            outline =
+                "#4f8f68";
+        }
+        else if (
+            food.type ===
+            "junk"
+        ) {
+            outline =
+                "#d95757";
+        }
+        else {
+            outline =
+                "#4d9ed8";
+        }
+        const centerX =
+            food.x *
+            tileSize +
+            tileSize / 2;
+        const centerY =
+            food.y *
+            tileSize +
+            tileSize / 2;
+        ctx.fillStyle =
+            outline;
+        ctx.beginPath();
+        ctx.arc(
+            centerX,
+            centerY,
+            tileSize * 0.39,
+            0,
+            Math.PI * 2
+        );
+        ctx.fill();
+        ctx.fillStyle =
+            background;
+        ctx.beginPath();
+        ctx.arc(
+            centerX,
+            centerY,
+            tileSize * 0.32,
+            0,
+            Math.PI * 2
+        );
+        ctx.fill();
+        ctx.font =
+            `${tileSize * 0.72}px Arial`;
+        ctx.textAlign =
+            "center";
+        ctx.textBaseline =
+            "middle";
+        ctx.fillText(
+            food.emoji,
+            centerX,
+            centerY + 1
+        );
+    }
+    snake.forEach(
+        (segment,index) => {
+            const padding = 2.5;
+            const x =
+                segment.x *
+                tileSize +
+                padding;
+            const y =
+                segment.y *
+                tileSize +
+                padding;
+            const size =
+                tileSize -
+                padding * 2;
+            ctx.fillStyle =
+                index === 0
+                    ? snakeHead
+                    : snakeBody;
+            roundRect(
+                ctx,
+                x,
+                y,
+                size,
+                size,
+                5
+            );
+            ctx.fill();
+            if (
+                index === 0
+            ) {
+                drawSnakeEyes(
+                    segment,
+                    direction
+                );
+            }
+        }
+    );
+    if (
+        paused &&
+        gameRunning &&
+        !gameOver
+    ) {
+        ctx.fillStyle =
+            "rgba(0,0,0,0.55)";
+        ctx.fillRect(
+            0,
+            0,
+            canvas.width,
+            canvas.height
+        );
+        ctx.fillStyle =
+            "white";
+        ctx.font =
+            "bold 32px Arial";
+        ctx.textAlign =
+            "center";
+        ctx.textBaseline =
+            "middle";
+        ctx.fillText(
+            "PAUSED",
+            canvas.width / 2,
+            canvas.height / 2
+        );
+    }
+}
+function roundRect(
+    context,
+    x,
+    y,
+    width,
+    height,
+    radius
+) {
+    context.beginPath();
+    context.moveTo(
+        x + radius,
+        y
+    );
+    context.lineTo(
+        x + width - radius,
+        y
+    );
+    context.quadraticCurveTo(
+        x + width,
+        y,
+        x + width,
+        y + radius
+    );
+    context.lineTo(
+        x + width,
+        y + height - radius
+    );
+    context.quadraticCurveTo(
+        x + width,
+        y + height,
+        x + width - radius,
+        y + height
+    );
+    context.lineTo(
+        x + radius,
+        y + height
+    );
+    context.quadraticCurveTo(
+        x,
+        y + height,
+        x,
+        y + height - radius
+    );
+    context.lineTo(
+        x,
+        y + radius
+    );
+    context.quadraticCurveTo(
+        x,
+        y,
+        x + radius,
+        y
+    );
+    context.closePath();
+}
+function drawSnakeEyes(
+    segment,
+    dir
+) {
+    const centerX =
+        segment.x *
+        tileSize +
+        tileSize / 2;
+    const centerY =
+        segment.y *
+        tileSize +
+        tileSize / 2;
+    let eyeOffsetX = 0;
+    let eyeOffsetY = 0;
+    if (
+        dir.x !== 0
+    ) {
+        eyeOffsetX =
+            dir.x * 4;
+    }
+    else {
+        eyeOffsetY =
+            dir.y * 4;
+    }
+    const eye1X =
+        centerX +
+        eyeOffsetX -
+        (
+            dir.y !== 0
+                ? 4
+                : 0
+        );
+    const eye1Y =
+        centerY +
+        eyeOffsetY -
+        (
+            dir.x !== 0
+                ? 4
+                : 0
+        );
+    const eye2X =
+        centerX +
+        eyeOffsetX +
+        (
+            dir.y !== 0
+                ? 4
+                : 0
+        );
+    const eye2Y =
+        centerY +
+        eyeOffsetY +
+        (
+            dir.x !== 0
+                ? 4
+                : 0
+        );
+    ctx.fillStyle =
+        "white";
+    ctx.beginPath();
+    ctx.arc(
+        eye1X,
+        eye1Y,
+        2.3,
+        0,
+        Math.PI * 2
+    );
+    ctx.fill();
+    ctx.beginPath();
+    ctx.arc(
+        eye2X,
+        eye2Y,
+        2.3,
+        0,
+        Math.PI * 2
+    );
+    ctx.fill();
+    ctx.fillStyle =
+        "#222";
+    ctx.beginPath();
+    ctx.arc(
+        eye1X,
+        eye1Y,
+        1,
+        0,
+        Math.PI * 2
+    );
+    ctx.fill();
+    ctx.beginPath();
+    ctx.arc(
+        eye2X,
+        eye2Y,
+        1,
+        0,
+        Math.PI * 2
+    );
+    ctx.fill();
+}
+function endGame(reason) {
+    gameRunning = false;
+    gameOver = true;
+    if (snakeAnimationFrame !== null) {
+        cancelAnimationFrame(snakeAnimationFrame);
+        snakeAnimationFrame = null;
+    }
+    if (
+        score > highScore
+    ) {
+        highScore =
+            score;
+        saveHighScore();
+    }
+    scoreDisplay.textContent =
+        score;
+    highScoreDisplay.textContent =
+        highScore;
+    overlayTitle.textContent =
+        "Game Over!";
+    overlayMessage.textContent =
+        reason +
+        " Final score: " +
+        score +
+        ".";
+    overlay.classList.add(
+        "show"
+    );
+    drawGame();
+}
+function togglePause() {
+    if (
+        !gameRunning ||
+        gameOver
+    ) {
+        return;
+    }
+    paused =
+        !paused;
+    drawGame();
+}
+document.addEventListener(
+    "keydown",
+    function(event) {
+        // Do not let Snake controls intercept typing in any text field.
+        // This is especially important for Pixel Food Challenge, where letters
+        // such as W, A, S and D are valid food-name characters.
+        const target = event.target;
+        if (
+            target instanceof HTMLElement &&
+            (
+                target.isContentEditable ||
+                target.closest("input, textarea, select, [contenteditable='true']")
+            )
+        ) {
+            return;
+        }
+
+        const key =
+            event.key.toLowerCase();
+        if (key === " ") {
+            if (gameRunning && !gameOver) {
+                event.preventDefault();
+                togglePause();
+            }
+            return;
+        }
+        if (paused || !gameRunning || gameOver) {
+            return;
+        }
+        if (
+            key === "arrowup" ||
+            key === "w"
+        ) {
+            if (
+                direction.y !== 1
+            ) {
+                nextDirection = {
+                    x: 0,
+                    y: -1
+                };
+            }
+            event.preventDefault();
+        }
+        else if (
+            key === "arrowdown" ||
+            key === "s"
+        ) {
+            if (
+                direction.y !== -1
+            ) {
+                nextDirection = {
+                    x: 0,
+                    y: 1
+                };
+            }
+            event.preventDefault();
+        }
+        else if (
+            key === "arrowleft" ||
+            key === "a"
+        ) {
+            if (
+                direction.x !== 1
+            ) {
+                nextDirection = {
+                    x: -1,
+                    y: 0
+                };
+            }
+            event.preventDefault();
+        }
+        else if (
+            key === "arrowright" ||
+            key === "d"
+        ) {
+            if (
+                direction.x !== -1
+            ) {
+                nextDirection = {
+                    x: 1,
+                    y: 0
+                };
+            }
+            event.preventDefault();
+        }
+    }
+);
+let touchStartX = 0;
+let touchStartY = 0;
+canvas.addEventListener(
+    "touchstart",
+    function(event) {
+        const touch =
+            event.changedTouches[0];
+        touchStartX =
+            touch.clientX;
+        touchStartY =
+            touch.clientY;
+    },
+    {
+        passive: true
+    }
+);
+canvas.addEventListener(
+    "touchend",
+    function(event) {
+        if (paused) {
+            return;
+        }
+        const touch =
+            event.changedTouches[0];
+        const deltaX =
+            touch.clientX -
+            touchStartX;
+        const deltaY =
+            touch.clientY -
+            touchStartY;
+        const minimumSwipe =
+            25;
+        if (
+            Math.abs(deltaX) <
+            minimumSwipe &&
+            Math.abs(deltaY) <
+            minimumSwipe
+        ) {
+            return;
+        }
+        if (
+            Math.abs(deltaX) >
+            Math.abs(deltaY)
+        ) {
+            if (
+                deltaX > 0
+            ) {
+                if (
+                    direction.x !== -1
+                ) {
+                    nextDirection = {
+                        x: 1,
+                        y: 0
+                    };
+                }
+            }
+            else {
+                if (
+                    direction.x !== 1
+                ) {
+                    nextDirection = {
+                        x: -1,
+                        y: 0
+                    };
+                }
+            }
+        }
+        else {
+            if (
+                deltaY > 0
+            ) {
+                if (
+                    direction.y !== -1
+                ) {
+                    nextDirection = {
+                        x: 0,
+                        y: 1
+                    };
+                }
+            }
+            else {
+                if (
+                    direction.y !== 1
+                ) {
+                    nextDirection = {
+                        x: 0,
+                        y: -1
+                    };
+                }
+            }
+        }
+    },
+    {
+        passive: true
+    }
+);
+function initialiseGame() {
+    snake = [
+        {
+            x: 10,
+            y: 10
+        },
+        {
+            x: 9,
+            y: 10
+        },
+        {
+            x: 8,
+            y: 10
+        },
+        {
+            x: 7,
+            y: 10
+        }
+    ];
+    foods = [];
+    spawnFood("healthy");
+    spawnFood("healthy");
+    spawnFood("healthy");
+    spawnFood("junk");
+    spawnFood("junk");
+    spawnFood("water");
+    drawGame();
+    resetSnakeToStart();
+}
+initialiseGame();
+
+
+/* Game 2: Pixel Food Challenge */
+(function () {
+  "use strict";
+  const foods = [
+    {name:"Apple", aliases:["red apple","green apple"], image:"photo-1560806887-1e4cd0b6cbd6"},
+    {name:"Banana", aliases:[], image:"photo-1571771894821-ce9b6c11b08e"},
+    {name:"Strawberry", aliases:["strawberries"], image:"photo-1464965911861-746a04b4bca6"},
+    {name:"Watermelon", aliases:[], image:"photo-1563114773-84221bd62daa"},
+    {name:"Orange", aliases:["oranges"], image:"photo-1547514701-42782101795e"},
+    {name:"Broccoli", aliases:[], image:"photo-1459411621453-7b03977f4bfc"},
+    {name:"Carrot", aliases:["carrots"], image:"photo-1445282768818-728615cc910a"},
+    {name:"Avocado", aliases:["avocados"], image:"photo-1523049673857-eb18f1d7b578"},
+    {name:"Pineapple", aliases:[], image:"photo-1550258987-190a2d41a8ba"},
+    {name:"Blueberries", aliases:["blueberry"], image:"photo-1498557850523-fd3d118b962e"},
+    {name:"Grapes", aliases:["grape"], image:"photo-1537640538966-79f369143f8f"},
+    {name:"Mango", aliases:["mangoes"], image:"photo-1553279768-865429fa0078"},
+    {name:"Kiwi", aliases:["kiwifruit"], image:"photo-1585059895524-72359e06133a"},
+    {name:"Lemon", aliases:["lemons"], image:"photo-1518649908117-4a7c7f8f7c4d"},
+    {name:"Peach", aliases:["peaches"], image:"photo-1629828874514-c1e5103d7e7c"},
+    {name:"Pear", aliases:["pears"], image:"photo-1519996529931-28324d6a630e"},
+    {name:"Cherries", aliases:["cherry"], image:"photo-1528825871115-3581a5387919"},
+    {name:"Raspberries", aliases:["raspberry"], image:"photo-1577069861033-55d04cec4ef5"},
+    {name:"Pumpkin", aliases:[], image:"photo-1570586437263-ab629fccc818"},
+    {name:"Corn", aliases:["sweetcorn"], image:"photo-1551754655-cd27e38d2076"},
+    {name:"Capsicum", aliases:["bell pepper","pepper"], image:"photo-1563565375-f3fdfdbefa83"},
+    {name:"Cucumber", aliases:["cucumbers"], image:"photo-1604977042946-1eecc30f269e"},
+    {name:"Tomato", aliases:["tomatoes"], image:"photo-1546094096-0df4bcaaa337"},
+    {name:"Potato", aliases:["potatoes"], image:"photo-1518977676601-b53f82aba655"},
+    {name:"Pizza", aliases:["pepperoni pizza"], image:"photo-1513104890138-7c749659a591"},
+    {name:"Burger", aliases:["hamburger","cheeseburger"], image:"photo-1568901346375-23c9450c58cd"},
+    {name:"French Fries", aliases:["fries","chips"], image:"photo-1573080496219-bb080dd4f877"},
+    {name:"Doughnut", aliases:["donut"], image:"photo-1551024506-0bccd828d307"},
+    {name:"Ice Cream", aliases:["icecream"], image:"photo-1560008581-09826d1de69e"},
+    {name:"Chocolate", aliases:["chocolate bar"], image:"photo-1511381939415-e44015466834"},
+    {name:"Hot Dog", aliases:["hotdog"], image:"photo-1612392062798-2dbaa8f8a9b9"},
+    {name:"Popcorn", aliases:[], image:"photo-1578849278619-e73505e9610f"},
+    {name:"Cupcake", aliases:["cup cakes"], image:"photo-1486427944299-d1955d23e34d"},
+    {name:"Cookies", aliases:["cookie","biscuits"], image:"photo-1499636136210-6f4ee915583e"},
+    {name:"Pancakes", aliases:["pancake"], image:"photo-1528207776546-365bb710ee93"},
+    {name:"Pretzel", aliases:["pretzels"], image:"photo-1585238342024-78d387f4a707"},
+    {name:"Donut", aliases:["doughnut"], image:"photo-1551024506-0bccd828d307"},
+    {name:"Nachos", aliases:[], image:"photo-1513456852971-30c0b8199d4d"},
+    {name:"Sushi", aliases:[], image:"photo-1579871494447-9811cf80d66c"},
+    {name:"Sandwich", aliases:["sandwiches"], image:"photo-1528735602780-2552fd46c7af"},
+    {name:"Toast", aliases:[], image:"photo-1525351484163-7529414344d8"}
+  ];
+  const TOTAL_ROUNDS = 30, ROUND_SECONDS = 20;
+  const $ = id => document.getElementById("g2-" + id);
+  let deck = [], currentFood = null, score = 0, correct = 0, round = 0, strikes = 0;
+  let timeLeft = ROUND_SECONDS, timer = null, transitionTimer = null;
+  let gameRunning = false, roundFinished = false, roundStartedAt = 0, imageLoadToken = 0;
+
+  function shuffle(array) {
+    for (let i = array.length - 1; i > 0; i--) {
+      const j = Math.floor(Math.random() * (i + 1));
+      [array[i], array[j]] = [array[j], array[i]];
+    }
+    return array;
+  }
+  function normalise(value) {
+    return value.toLowerCase().trim().replace(/[^a-z0-9 ]/g, "").replace(/\s+/g, " ");
+  }
+  function resetToStart() {
+    gameRunning = false;
+    roundFinished = true;
+    imageLoadToken++; // Ignore any image that finishes loading after exiting.
+    clearInterval(timer);
+    clearTimeout(transitionTimer);
+    timer = null;
+    transitionTimer = null;
+    $("guess-input").value = "";
+    $("guess-input").disabled = true;
+    $("guess-button").disabled = true;
+    $("skip-button").disabled = true;
+    $("message").textContent = "Press Start Game to begin!";
+    $("strikes").textContent = "Wrong guesses: 0 / 3";
+    $("start-screen").classList.remove("g2-hidden");
+    $("end-screen").classList.add("g2-hidden");
+  }
+  function startGame() {
+    clearInterval(timer); clearTimeout(transitionTimer);
+    deck = shuffle([...foods]).slice(0, TOTAL_ROUNDS);
+    score = 0; correct = 0; round = 0; gameRunning = true; roundFinished = false;
+    $("score").textContent = score;
+    $("start-screen").classList.add("g2-hidden");
+    $("end-screen").classList.add("g2-hidden");
+    nextRound();
+  }
+  function nextRound() {
+    clearInterval(timer); clearTimeout(transitionTimer);
+    if (!gameRunning) return;
+    if (round >= TOTAL_ROUNDS) { endGame(); return; }
+    round++; strikes = 0; timeLeft = ROUND_SECONDS; roundFinished = false;
+    currentFood = deck[round - 1];
+    $("round").textContent = round;
+    $("time").textContent = timeLeft;
+    $("timer-fill").style.width = "100%";
+    $("timer-fill").style.background = "#35b56a";
+    $("message").textContent = "";
+    $("message").style.color = "#243047";
+    $("strikes").textContent = "Wrong guesses: 0 / 3";
+    $("guess-input").value = "";
+    $("guess-input").disabled = false;
+    $("guess-button").disabled = false;
+    $("skip-button").disabled = false;
+    const img = $("food-image");
+    // Hide the previous round's photo while the next one loads. Otherwise a
+    // slow network can briefly show the old food beside the new answer.
+    const loadToken = ++imageLoadToken;
+    img.style.opacity = "0";
+    img.style.filter = "blur(24px)";
+    img.alt = "Loading mystery food";
+    $("pixel-overlay").style.opacity = "1";
+    $("guess-input").disabled = true;
+    $("guess-button").disabled = true;
+    $("skip-button").disabled = true;
+    $("message").textContent = "Loading food image…";
+
+    const imageUrl = "https://images.unsplash.com/" + currentFood.image + "?auto=format&fit=crop&w=1000&q=80";
+    const preload = new Image();
+    const beginRound = (loaded) => {
+      if (loadToken !== imageLoadToken || !gameRunning || roundFinished) return;
+      if (loaded) {
+        img.src = imageUrl;
+        img.alt = "Mystery food";
+      } else {
+        // Remove the previous image entirely so a failed request can never
+        // pair an old photo with this round's answer.
+        img.removeAttribute("src");
+        img.alt = "Food image unavailable";
+        img.style.opacity = "0";
+        img.style.filter = "blur(0px)";
+        $("pixel-overlay").style.opacity = "0";
+        $("message").textContent = "This image couldn't load. Skipping to the next food…";
+        roundFinished = true;
+        $("guess-input").disabled = true;
+        $("guess-button").disabled = true;
+        $("skip-button").disabled = true;
+        transitionTimer = setTimeout(() => {
+          if (gameRunning && loadToken === imageLoadToken) nextRound();
+        }, 1200);
+        return;
+      }
+      img.style.opacity = "1";
+      $("guess-input").disabled = false;
+      $("guess-button").disabled = false;
+      $("skip-button").disabled = false;
+      $("message").textContent = "";
+      roundStartedAt = Date.now();
+      $("guess-input").focus();
+      timer = setInterval(updateTimer, 100);
+    };
+    preload.onload = () => beginRound(true);
+    preload.onerror = () => beginRound(false);
+    preload.src = imageUrl;
+  }
+  function updateTimer() {
+    if (!gameRunning || roundFinished) return;
+    const elapsed = (Date.now() - roundStartedAt) / 1000;
+    timeLeft = Math.max(0, ROUND_SECONDS - elapsed);
+    $("time").textContent = Math.ceil(timeLeft);
+    $("timer-fill").style.width = (timeLeft / ROUND_SECONDS * 100) + "%";
+    const progress = Math.min(1, elapsed / ROUND_SECONDS);
+    $("food-image").style.filter = `blur(${24 * (1 - progress)}px)`;
+    $("pixel-overlay").style.opacity = String(1 - progress);
+    if (timeLeft <= 7) $("timer-fill").style.background = "#ff9800";
+    if (timeLeft <= 3) $("timer-fill").style.background = "#e53935";
+    if (timeLeft <= 0) finishRound(false, "time");
+  }
+  function submitGuess() {
+    if (!gameRunning || roundFinished) return;
+    const guess = normalise($("guess-input").value);
+    if (!guess) return;
+    const accepted = [currentFood.name, ...currentFood.aliases].map(normalise);
+    if (accepted.includes(guess)) {
+      correct++;
+      const points = Math.max(10, Math.ceil(timeLeft * 10));
+      score += points;
+      $("score").textContent = score;
+      $("message").textContent = `Correct! +${points} points!`;
+      $("message").style.color = "#218838";
+      finishRound(true);
+      return;
+    }
+    strikes++;
+    $("guess-input").value = "";
+    $("strikes").textContent = `Wrong guesses: ${strikes} / 3`;
+    $("message").textContent = strikes >= 3
+      ? "Three strikes! The answer was " + currentFood.name
+      : "Not quite! Try another guess.";
+    $("message").style.color = "#d93025";
+    if (strikes >= 3) finishRound(false, "strikes");
+    else $("guess-input").focus();
+  }
+  function skipRound() {
+    if (gameRunning && !roundFinished) finishRound(false, "skip");
+  }
+  function finishRound(wasCorrect, reason = "") {
+    if (roundFinished) return;
+    roundFinished = true; clearInterval(timer);
+    $("guess-input").disabled = true;
+    $("guess-button").disabled = true;
+    $("skip-button").disabled = true;
+    $("food-image").style.filter = "blur(0px)";
+    $("pixel-overlay").style.opacity = "0";
+    if (!wasCorrect) {
+      if (reason === "skip") $("message").textContent = "Skipped! It was " + currentFood.name;
+      else if (reason === "time") $("message").textContent = "Time's up! It was " + currentFood.name;
+      else if (reason === "strikes") $("message").textContent = "The answer was " + currentFood.name;
+      $("message").style.color = "#d97706";
+    }
+    transitionTimer = setTimeout(nextRound, 1500);
+  }
+  function endGame() {
+    gameRunning = false; roundFinished = true;
+    clearInterval(timer); clearTimeout(transitionTimer);
+    $("end-title").textContent = "Challenge Complete!";
+    $("end-summary").textContent = `You scored ${score} points and guessed ${correct} out of ${TOTAL_ROUNDS} foods correctly!`;
+    $("end-screen").classList.remove("g2-hidden");
+  }
+  window.resetPixelFoodChallenge = resetToStart;
+  resetToStart();
+  $("start-button").addEventListener("click", startGame);
+  $("restart-button").addEventListener("click", startGame);
+  $("guess-button").addEventListener("click", submitGuess);
+  $("skip-button").addEventListener("click", skipRound);
+  $("guess-input").addEventListener("keydown", event => {
+    if (event.key === "Enter") submitGuess();
+  });
+})();
+
+/* Game 3: Fruit Ninja */
+(function () {
+  "use strict";
+  const $ = id => document.getElementById("g3-" + id);
+  const game = $("game-area"), scoreDisplay = $("score"), timerDisplay = $("timer");
+  const message = $("message"), overlay = $("overlay"), overlayTitle = $("overlay-title");
+  const overlayText = $("overlay-text"), startButton = $("start-button");
+  const fruits = ["🍉","🍎","🍊","🍓","🍍","🍌","🍇","🥝","🍐","🍒"];
+  const bombEmoji = "💣";
+  let score = 0, timeLeft = 30, running = false;
+  let spawnInterval = null, timerInterval = null, animationFrame = null;
+  let objects = [], lastTime = 0;
+
+  function clearGameObjects() {
+    objects.forEach(obj => obj.element.remove());
+    objects = [];
+    game.querySelectorAll(".g3-slash").forEach(effect => effect.remove());
+  }
+  function resetToStart() {
+    running = false;
+    clearInterval(spawnInterval);
+    clearInterval(timerInterval);
+    spawnInterval = null;
+    timerInterval = null;
+    if (animationFrame !== null) cancelAnimationFrame(animationFrame);
+    animationFrame = null;
+    clearGameObjects();
+    score = 0;
+    timeLeft = 30;
+    scoreDisplay.textContent = "0";
+    timerDisplay.textContent = "Time: 30";
+    message.textContent = "Get ready to slice!";
+    overlayTitle.textContent = "Ready, Ninja?";
+    overlayText.textContent = "Move your mouse over fruit to slice it, or tap fruit on a touchscreen. Avoid bombs. You have 30 seconds.";
+    startButton.textContent = "Start Game";
+    overlay.classList.remove("g3-hidden");
+  }
+  function startGame() {
+    clearInterval(spawnInterval); clearInterval(timerInterval);
+    if (animationFrame !== null) cancelAnimationFrame(animationFrame);
+    clearGameObjects();
+    score = 0; timeLeft = 30; running = true; lastTime = performance.now();
+    scoreDisplay.textContent = score;
+    timerDisplay.textContent = "Time: 30";
+    message.textContent = "Slice the fruit! Avoid the bombs!";
+    overlay.classList.add("g3-hidden");
+    spawnInterval = setInterval(spawnObject, 575);
+    timerInterval = setInterval(() => {
+      if (!running) return;
+      timeLeft = Math.max(0, timeLeft - 1);
+      timerDisplay.textContent = "Time: " + timeLeft;
+      if (timeLeft <= 0) endGame();
+    }, 1000);
+    spawnObject();
+    animationFrame = requestAnimationFrame(animate);
+  }
+  function spawnObject() {
+    if (!running) return;
+    const element = document.createElement("div");
+    element.className = "g3-fruit";
+    const isBomb = Math.random() < 0.17;
+    element.textContent = isBomb ? bombEmoji : fruits[Math.floor(Math.random() * fruits.length)];
+    const width = game.clientWidth;
+    const height = game.clientHeight;
+    const x = 20 + Math.random() * Math.max(1, width - 90);
+    const y = height + 30;
+    const obj = {element, x, y, vx:(Math.random() - 0.5) * 3, vy:-(7 + Math.random() * 4), gravity:0.13, isBomb, sliced:false};
+    element.style.left = x + "px";
+    element.style.top = y + "px";
+    element.addEventListener("pointerenter", () => sliceObject(obj));
+    element.addEventListener("pointerdown", event => {
+      event.preventDefault();
+      sliceObject(obj);
+    });
+    game.appendChild(element);
+    objects.push(obj);
+  }
+  function sliceObject(obj) {
+    if (!running || obj.sliced) return;
+    obj.sliced = true;
+    if (obj.isBomb) {
+      score = Math.max(0, score - 3);
+      message.textContent = "Bomb! -3 points";
+    } else {
+      score++;
+      message.textContent = "Nice slice! +1 point";
+    }
+    scoreDisplay.textContent = score;
+    const effect = document.createElement("div");
+    effect.className = "g3-slash";
+    effect.textContent = obj.isBomb ? "💥" : "✦ SLASH!";
+    effect.style.left = obj.x + "px";
+    effect.style.top = obj.y + "px";
+    game.appendChild(effect);
+    setTimeout(() => effect.remove(), 400);
+    obj.element.remove();
+  }
+  function animate(now = performance.now()) {
+    if (!running) return;
+    const delta = Math.min(Math.max((now - lastTime) / 16.67, 0), 2);
+    lastTime = now;
+    const height = game.clientHeight;
+    objects = objects.filter(obj => {
+      if (obj.sliced || !obj.element.isConnected) return false;
+      obj.x += obj.vx * delta;
+      obj.y += obj.vy * delta;
+      obj.vy += obj.gravity * delta;
+      obj.element.style.left = obj.x + "px";
+      obj.element.style.top = obj.y + "px";
+      if (obj.y > height + 100) {
+        obj.element.remove();
+        return false;
+      }
+      return true;
+    });
+    animationFrame = requestAnimationFrame(animate);
+  }
+  function endGame() {
+    if (!running) return;
+    running = false;
+    clearInterval(spawnInterval); clearInterval(timerInterval);
+    if (animationFrame !== null) cancelAnimationFrame(animationFrame);
+    timerDisplay.textContent = "Time: 0";
+    clearGameObjects();
+    overlayTitle.textContent = "Time's Up!";
+    overlayText.textContent = `You scored ${score} points! ` +
+      (score >= 25 ? "Legendary ninja skills!" : score >= 15 ? "Great slicing!" : score >= 8 ? "Nice effort!" : "Keep practising, ninja!");
+    startButton.textContent = "Play Again";
+    overlay.classList.remove("g3-hidden");
+    message.textContent = "Game over!";
+  }
+  window.resetFruitNinja = resetToStart;
+  resetToStart();
+  startButton.addEventListener("click", startGame);
+})();
+
+// Exit controls and automatic reset when a game section is scrolled away.
+(function () {
+  const resetters = {
+    snake: () => window.resetSnakeToStart(),
+    pixel: () => window.resetPixelFoodChallenge(),
+    fruit: () => window.resetFruitNinja()
+  };
+  document.querySelectorAll("[data-game-exit]").forEach(button => {
+    button.addEventListener("click", () => {
+      const reset = resetters[button.dataset.gameExit];
+      if (reset) reset();
+    });
+  });
+
+  if ("IntersectionObserver" in window) {
+    const observer = new IntersectionObserver(entries => {
+      for (const entry of entries) {
+        if (!entry.isIntersecting) {
+          const section = entry.target;
+          const reset = section.id === "section5" ? resetters.snake
+            : section.id === "section6" ? resetters.pixel
+            : resetters.fruit;
+          if (reset) reset();
+        }
+      }
+    }, { threshold: 0.01 });
+    ["section5", "section6", "section7"].forEach(id => {
+      const section = document.getElementById(id);
+      if (section) observer.observe(section);
+    });
+  }
+})();
+
+</script>
+</body>
+</html>
