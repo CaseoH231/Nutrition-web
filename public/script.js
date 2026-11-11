@@ -505,22 +505,24 @@ function drawGame() {
         getComputedStyle(
             document.body
         );
+    // .trim() because some browsers return CSS variables with a leading
+    // space, which the canvas can reject as an invalid colour.
     const background =
         styles.getPropertyValue(
             "--game-background"
-        );
+        ).trim();
     const grid =
         styles.getPropertyValue(
             "--grid"
-        );
+        ).trim();
     const snakeHead =
         styles.getPropertyValue(
             "--snake-head"
-        );
+        ).trim();
     const snakeBody =
         styles.getPropertyValue(
             "--snake-body"
-        );
+        ).trim();
     ctx.fillStyle =
         background;
     ctx.fillRect(
@@ -871,6 +873,9 @@ function endGame(reason) {
         " Final score: " +
         score +
         ".";
+    // The start screen renames this button to "Start Game", so put it back.
+    const overlayButton = overlay.querySelector("button");
+    if (overlayButton) overlayButton.textContent = "Play Again";
     overlay.classList.add(
         "show"
     );
@@ -904,6 +909,10 @@ document.addEventListener(
             return;
         }
 
+        // Some keydown events (for example browser autofill) have no key.
+        if (typeof event.key !== "string") {
+            return;
+        }
         const key =
             event.key.toLowerCase();
         if (key === " ") {
@@ -1119,10 +1128,10 @@ initialiseGame();
     {name:"Grapes", aliases:["grape"], image:"photo-1537640538966-79f369143f8f"},
     {name:"Mango", aliases:["mangoes"], image:"photo-1553279768-865429fa0078"},
     {name:"Kiwi", aliases:["kiwifruit"], image:"photo-1585059895524-72359e06133a"},
-    {name:"Lemon", aliases:["lemons"], image:"photo-1518649908117-4a7c7f8f7c4d"},
-    {name:"Peach", aliases:["peaches"], image:"photo-1629828874514-c1e5103d7e7c"},
-    {name:"Pear", aliases:["pears"], image:"photo-1519996529931-28324d6a630e"},
-    {name:"Cherries", aliases:["cherry"], image:"photo-1528825871115-3581a5387919"},
+    {name:"Lemon", aliases:["lemons"], image:"photo-1590502593747-42a996133562"},
+    {name:"Peach", aliases:["peaches"], image:"photo-1639588473831-dd9d014646ae"},
+    {name:"Pear", aliases:["pears"], image:"photo-1615484477778-ca3b77940c25"},
+    {name:"Cherries", aliases:["cherry"], image:"photo-1610523377846-eba487f8f574"},
     {name:"Raspberries", aliases:["raspberry"], image:"photo-1577069861033-55d04cec4ef5"},
     {name:"Pumpkin", aliases:[], image:"photo-1570586437263-ab629fccc818"},
     {name:"Corn", aliases:["sweetcorn"], image:"photo-1551754655-cd27e38d2076"},
@@ -1133,16 +1142,15 @@ initialiseGame();
     {name:"Pizza", aliases:["pepperoni pizza"], image:"photo-1513104890138-7c749659a591"},
     {name:"Burger", aliases:["hamburger","cheeseburger"], image:"photo-1568901346375-23c9450c58cd"},
     {name:"French Fries", aliases:["fries","chips"], image:"photo-1573080496219-bb080dd4f877"},
-    {name:"Doughnut", aliases:["donut"], image:"photo-1551024506-0bccd828d307"},
+    {name:"Doughnut", aliases:["donut","doughnuts","donuts"], image:"photo-1551024601-bec78aea704b"},
     {name:"Ice Cream", aliases:["icecream"], image:"photo-1560008581-09826d1de69e"},
     {name:"Chocolate", aliases:["chocolate bar"], image:"photo-1511381939415-e44015466834"},
-    {name:"Hot Dog", aliases:["hotdog"], image:"photo-1612392062798-2dbaa8f8a9b9"},
+    {name:"Hot Dog", aliases:["hotdog"], image:"photo-1612392062631-94dd858cba88"},
     {name:"Popcorn", aliases:[], image:"photo-1578849278619-e73505e9610f"},
-    {name:"Cupcake", aliases:["cup cakes"], image:"photo-1486427944299-d1955d23e34d"},
+    {name:"Cupcake", aliases:["cupcakes","cup cake","cup cakes"], image:"photo-1486427944299-d1955d23e34d"},
     {name:"Cookies", aliases:["cookie","biscuits"], image:"photo-1499636136210-6f4ee915583e"},
     {name:"Pancakes", aliases:["pancake"], image:"photo-1528207776546-365bb710ee93"},
-    {name:"Pretzel", aliases:["pretzels"], image:"photo-1585238342024-78d387f4a707"},
-    {name:"Donut", aliases:["doughnut"], image:"photo-1551024506-0bccd828d307"},
+    {name:"Pretzel", aliases:["pretzels"], image:"photo-1511951786553-1d4f975424c9"},
     {name:"Nachos", aliases:[], image:"photo-1513456852971-30c0b8199d4d"},
     {name:"Sushi", aliases:[], image:"photo-1579871494447-9811cf80d66c"},
     {name:"Sandwich", aliases:["sandwiches"], image:"photo-1528735602780-2552fd46c7af"},
@@ -1150,7 +1158,7 @@ initialiseGame();
   ];
   const TOTAL_ROUNDS = 30, ROUND_SECONDS = 20;
   const $ = id => document.getElementById("g2-" + id);
-  let deck = [], currentFood = null, score = 0, correct = 0, round = 0, strikes = 0;
+  let deck = [], spareFoods = [], currentFood = null, score = 0, correct = 0, round = 0, strikes = 0;
   let timeLeft = ROUND_SECONDS, timer = null, transitionTimer = null;
   let gameRunning = false, roundFinished = false, roundStartedAt = 0, imageLoadToken = 0;
 
@@ -1177,13 +1185,27 @@ initialiseGame();
     $("guess-button").disabled = true;
     $("skip-button").disabled = true;
     $("message").textContent = "Press Start Game to begin!";
+    $("message").style.color = "";
     $("strikes").textContent = "Wrong guesses: 0 / 3";
+    // Clear the last game's stats and photo so they don't show behind the start screen.
+    $("score").textContent = "0";
+    $("time").textContent = ROUND_SECONDS;
+    $("round").textContent = "1";
+    $("timer-fill").style.width = "100%";
+    $("timer-fill").style.background = "#35b56a";
+    $("food-image").removeAttribute("src");
+    $("food-image").style.opacity = "0";
+    $("pixel-overlay").style.opacity = "1";
     $("start-screen").classList.remove("g2-hidden");
     $("end-screen").classList.add("g2-hidden");
   }
   function startGame() {
     clearInterval(timer); clearTimeout(transitionTimer);
-    deck = shuffle([...foods]).slice(0, TOTAL_ROUNDS);
+    const shuffled = shuffle([...foods]);
+    deck = shuffled.slice(0, TOTAL_ROUNDS);
+    // Foods not used this game. If a photo fails to load, one of these
+    // replaces it so the player doesn't lose a round.
+    spareFoods = shuffled.slice(TOTAL_ROUNDS);
     score = 0; correct = 0; round = 0; gameRunning = true; roundFinished = false;
     $("score").textContent = score;
     $("start-screen").classList.add("g2-hidden");
@@ -1240,6 +1262,11 @@ initialiseGame();
         $("guess-input").disabled = true;
         $("guess-button").disabled = true;
         $("skip-button").disabled = true;
+        if (spareFoods.length > 0) {
+          // Swap in a spare food and replay this round number instead of using it up.
+          deck[round - 1] = spareFoods.shift();
+          round--;
+        }
         transitionTimer = setTimeout(() => {
           if (gameRunning && loadToken === imageLoadToken) nextRound();
         }, 1200);
